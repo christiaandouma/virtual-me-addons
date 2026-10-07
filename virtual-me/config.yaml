@@ -1,0 +1,25 @@
+# Metadata only — no source, no secrets. The Supervisor pulls the
+# pre-built image below; nothing is built on the HA host.
+name: virtual-me connectors
+version: "0.1.0"
+slug: virtual_me_connectors
+description: MCP connectors for the virtual-me assistant
+arch:
+  - aarch64
+  - amd64
+# Multi-arch manifest list, tag = version (see addon.yml in the virtual-me
+# source repo). Private ghcr.io package: the Supervisor needs
+# `ha docker registries add ghcr.io --username <user> --password <PAT>`
+# with a classic PAT scoped to read:packages (see ADR 0002 in virtual-me).
+image: ghcr.io/christiaandouma/virtual-me-addon
+startup: services
+# The HA base image uses s6-overlay as PID 1; the Supervisor's own init must be off.
+init: false
+homeassistant_api: true
+watchdog: http://[HOST]:[PORT:8081]/health
+# Calendar PoC (#33). Published on the HA host; protected by bearer token +
+# LAN check in the connector, not by ingress (ADR 0001).
+ports:
+  8081/tcp: 8081
+options: {}
+schema: {}
