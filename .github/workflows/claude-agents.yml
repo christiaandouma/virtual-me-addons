@@ -1,0 +1,21 @@
+name: Claude Agents
+
+# Dit bestand bevat bewust geen logica. De echte routing en agent-aansturing
+# leven centraal in christiaandouma/claude-agent-template. Wijzig dit bestand dus niet
+# per project — verbeteringen horen in het template-repo, en werken vanzelf door.
+
+on:
+  issues:
+    types: [opened, labeled, closed]
+  issue_comment:
+    types: [created]
+  pull_request:
+    types: [opened, synchronize, ready_for_review]
+  schedule:
+    - cron: "17 6 * * 1" # wekelijkse steward-audit, maandag
+  workflow_dispatch:
+
+jobs:
+  claude-agents:
+    uses: christiaandouma/claude-agent-template/.github/workflows/claude-agents-reusable.yml@main
+    secrets: inherit
